@@ -1,4 +1,4 @@
-import ServerList from "../components/dashboard/ServerList";
+import DashboardShell from "./DashboardShell";
 
 
 export const metadata = {
@@ -9,10 +9,7 @@ export const metadata = {
 export default function DashboardLayout({ children }) {
     return (
         <>
-            <div>
-                <ServerList />
-                {children}
-            </div>
+            <DashboardShell>{children}</DashboardShell>
         </>
     );
 }
