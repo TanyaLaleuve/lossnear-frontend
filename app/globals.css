@@ -37,7 +37,7 @@
   --color-gray-discord: #888;
   --color-gray-discord-hover: #666;
 
-  --modal-background: #272727;
+  --modal-background: linear-gradient(135deg, #535353, #353535);
   --modal-foreground: #ffffff;
   --modal-foreground-secondary: #a7a7a7;
   --modal-foreground-tertiary: #535353;
@@ -677,14 +677,11 @@ body>footer {
   cursor: pointer;
   padding: 12px 24px;
   margin: 10px 0;
-  text-decoration: underline;
-  text-underline-offset: 4px;
-  transition: text-decoration-thickness 0.2s;
+  text-decoration: none;
+  transition: transform 0.2s ease;
 }
 
 .btn-forget-password:hover {
-  text-decoration-thickness: 1.5px;
-  text-decoration-style: solid;
-  font-weight: bold;
-  z-index: 1000;
+  transform: scale(1.03);
+  text-decoration: underline;
 }

@@ -69,6 +69,9 @@ export const AuthProvider = ({ children }) => {
             setUser(null); // Clear l'user
         } catch (error) {
             console.error('Erreur logout:', error);
+        }finally {
+           // window.location.href = "/";
+            setLoading(false);
         }
     }
     // 6️⃣ Valeur partagée à tous les composants

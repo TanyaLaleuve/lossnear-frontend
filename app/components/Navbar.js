@@ -45,7 +45,7 @@ export default function Navbar() {
             <nav className={hidden ? "navbar hidden" : "navbar"}>
                 <div className="global-wrapper">
                     <div className="navbar-content">
-                        <h1 className="navbar-title lossnear-gradient" onClick={() => { setOpen(false); }}>LossNear</h1>
+                        <h1 className="navbar-title lossnear-gradient" onClick={() => { setOpen(false); window.location.href = "/"; }}>LossNear</h1>
 
                         <div className="navbar-right">
                             {/* avatar logged */}
