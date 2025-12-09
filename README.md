@@ -1,4 +1,4 @@
-# LossNear
+# LossNear - Frontend
 
 Frontend Next.js pour le projet LossNear : bot Discord + backend API + backend worker, concus pour tourner sur Kubernetes avec scalabilite horizontale.
 
