@@ -1,36 +1,34 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# LossNear
 
-## Getting Started
+Frontend Next.js pour le projet LossNear : bot Discord + backend API + backend worker, concus pour tourner sur Kubernetes avec scalabilite horizontale.
 
-First, run the development server:
+## Vision globale
+- Bot Discord et backends en Java/Spring.
+- MongoDB comme base de donnees principale.
+- Redis Streams pour les files/queues, Redis pour le cache.
+- Frontend en Next.js (App Router) pour le site vitrine et les dashboards.
+- Deploiement cible sur Kubernetes (un dashboard public bot, un dashboard admin prive pour le cluster).
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Etat actuel du frontend
+- Site vitrine en place (home, about, status).
+- Navigation globale (Navbar + Footer) et styles generaux dans `app/globals.css`.
+- Auth mockee (providers + API mock sous `app/api/mock`) avec un loader global.
+- Dashboard (public) structure de base: page `app/dashboard/page.js` et layout `app/dashboard/layout.js`.
+- Gestion et affichage du modal de connexion (`LoginModal`) et etat de connexion via `AuthContext`.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Architecture frontend
+- `app/layout.js` : root layout, met en place `AuthProvider`, Navbar, Footer et loader global.
+- `app/context/AuthContext.js` : gestion de l'etat utilisateur (mock).
+- `app/components/` : UI (Navbar, Footer, modals, dashboard components).
+- `app/api/mock/` : endpoints mock pour dev local (session, user, guilds).
+- Dashboards
+  - Public : gestion du bot (en construction).
+  - Admin (a venir) : gestion du cluster Kubernetes (prive).
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## Scripts
+- `npm run dev` : demarrage en dev sur `http://localhost:3000`.
+- `npm run build` : build production.
+- `npm start` : run production.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Auteur
+Projet porte par Tanya (24 ans), dev ops Java backend depuis ~12-13 ans, seule dev sur le projet pour le moment.
