@@ -157,11 +157,11 @@ ul {
   z-index: 100;
   width: 100%;
 
-  background: #111;
+  background: #0808088c;
   height: var(--navbar-height);
   color: white;
   /*border-bottom: 1px solid #333;*/
-
+  backdrop-filter: blur(20px);
 }
 
 .navbar-content {

@@ -2,13 +2,13 @@
 import { useAuth } from "@/app/context/AuthContext";
 import { useEffect, useRef, useState } from "react";
 import { FaHome } from "react-icons/fa";
-
+import { useRouter  } from "next/navigation";
 export default function ServerList() {
   const { user } = useAuth();
   const [isOpen, setIsOpen] = useState(true);
   const startXRef = useRef(0);
   const startYRef = useRef(0);
-
+  const router = useRouter();
   useEffect(() => {
     const SWIPE_THRESHOLD = 60;
     const handleTouchStart = (event) => {
@@ -48,7 +48,7 @@ export default function ServerList() {
     return ( 
             <div className="dashboard-layout-sidebar">
                   <button className="sidebar-home-btn" onClick={() => {
-                    window.location.href = "/dashboard";
+                    router.push('/dashboard');
                   }}><FaHome/></button>
                   <div className="server-list">
                   </div>

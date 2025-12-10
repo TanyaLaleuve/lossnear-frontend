@@ -5,13 +5,12 @@ import { useEffect, useRef, useState } from "react";
 import LoginModal from "./modals/LoginModal";
 import { useAuth } from "../context/AuthContext";
 import DefaultAvatar from "./DefaultAvatar";
-
+import { usePathname } from "next/navigation";
 export default function Navbar() {
     const [open, setOpen] = useState(false);
     const { user, logout } = useAuth();
     const [showLoginModal, setShowLoginModal] = useState(false);
     const [avatarError, setAvatarError] = useState(false);
-
     const [hidden, setHidden] = useState(false);
     const lastScroll = useRef(0);
     useEffect(() => {
@@ -58,6 +57,19 @@ export default function Navbar() {
             targets.forEach((t) => t.removeEventListener("scroll", handleScroll));
         };
     }, [open]);
+
+    // Scroll en haut à chaque changement de route et réinitialise l'état interne de la navbar
+    const pathname = usePathname();
+    useEffect(() => {
+        if (typeof document === "undefined") return;
+        const body = document.body;
+        body.scrollTop = 0;
+        body.scrollLeft = 0;
+        body.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+        lastScroll.current = 0;
+        setHidden(false);
+    }, [pathname]);
+
     return (
         <>
             <nav className={hidden ? "navbar hidden" : "navbar"}>
@@ -106,7 +118,7 @@ export default function Navbar() {
                             console.log("close")
                         }}>
                             <ul onClick={(e) => e.stopPropagation()} className="navbar-links-list">
-                                <li><Link href="/" onClick={() => setOpen(false)}>Accueil</Link></li>
+                                <li><Link href="/" onClick={() => {setOpen(false)}}>Accueil</Link></li>
                                 <li><Link href="/about" onClick={() => setOpen(false)}>À propos</Link></li>
                                 <li><Link href="/status" onClick={() => setOpen(false)}>Statut</Link></li>
                                 <li><Link href="/custom" onClick={() => setOpen(false)}>Personnalisé</Link></li>
