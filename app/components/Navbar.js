@@ -15,30 +15,48 @@ export default function Navbar() {
     const [hidden, setHidden] = useState(false);
     const lastScroll = useRef(0);
     useEffect(() => {
-        // Initialise avec la position actuelle
-        lastScroll.current = window.scrollY;
+        const getScrollY = (target) => {
+            if (typeof window === "undefined") return 0;
+            if (target && typeof target.scrollTop === "number") return target.scrollTop;
+            if (document.scrollingElement) return document.scrollingElement.scrollTop;
+            return (
+                window.scrollY ||
+                document.documentElement.scrollTop ||
+                document.body.scrollTop ||
+                0
+            );
+        };
 
-        const handleScroll = () => {
+        lastScroll.current = getScrollY();
+
+        const handleScroll = (event) => {
+            const source = event?.target || event?.currentTarget;
+            const currentScroll = getScrollY(source);
+            //debug
+            /*console.log("Navbar handleScroll", {
+                source: source?.nodeName || "unknown",
+                scroll: currentScroll,
+                open,
+            });*/
             if (open) return;
-            const currentScroll = window.scrollY;
 
-            // Toujours afficher la navbar en haut de page (gère l'overscroll bounce)
             if (currentScroll <= 0) {
                 setHidden(false);
-            }
-            // Scroll down = cache la navbar
-            else if (currentScroll > lastScroll.current) {
+            } else if (currentScroll > lastScroll.current) {
                 setHidden(true);
-            }
-            // Scroll up = montre la navbar
-            else if (currentScroll < lastScroll.current) {
+            } else if (currentScroll < lastScroll.current) {
                 setHidden(false);
             }
 
             lastScroll.current = currentScroll;
         };
-        window.addEventListener("scroll", handleScroll);
-        return () => window.removeEventListener("scroll", handleScroll);
+
+        const targets = [window, document, document.scrollingElement, document.body].filter(Boolean);
+        targets.forEach((t) => t.addEventListener("scroll", handleScroll, { passive: true }));
+
+        return () => {
+            targets.forEach((t) => t.removeEventListener("scroll", handleScroll));
+        };
     }, [open]);
     return (
         <>
