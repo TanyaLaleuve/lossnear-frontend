@@ -37,7 +37,7 @@ export default function Footer() {
                     <aside className="global-footer-social">
                         <ul>
                             <li><Link href="https://discord.gg/D857rxz"><FaDiscord className="global-footer-social-item" /></Link></li>
-                            <li><Link href="https://github.com/lossnear"><FaGithub className="global-footer-social-item" /></Link></li>
+                            <li><Link href="https://github.com/TanyaLaleuve"><FaGithub className="global-footer-social-item" /></Link></li>
                         </ul>
                     </aside>
                     <article className="global-footer-copyright">

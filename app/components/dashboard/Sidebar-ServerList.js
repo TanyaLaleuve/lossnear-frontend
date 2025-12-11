@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { FaHome, FaSync } from "react-icons/fa";
 import { usePathname, useRouter } from "next/navigation";
 
-export default function SidebarServerList() {
+export default function SidebarServerList({ onLoadingChange }) {
   const { user } = useAuth();
   const [isOpen, setIsOpen] = useState(true);
   const startXRef = useRef(0);
@@ -77,6 +77,12 @@ export default function SidebarServerList() {
   useEffect(() => {
     loadGuilds();
   }, []);
+
+  useEffect(() => {
+    if (typeof onLoadingChange === "function") {
+      onLoadingChange(loading);
+    }
+  }, [loading, onLoadingChange]);
 
   function reloadAll() {
     loadGuilds();

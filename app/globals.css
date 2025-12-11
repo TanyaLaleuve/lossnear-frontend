@@ -585,6 +585,80 @@ body>footer {
   transition: margin-left 0.25s ease;
   min-width: 0;
   padding: 2rem;
+  position: relative;
+  isolation: isolate; /* allow backdrop-filter to affect only this stacking context */
+}
+.dashboard-shell-content-loading{
+  pointer-events: none;
+  opacity: 0.6;
+  overflow: hidden;
+}
+.dashboard-shell-content-loading::before{
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 9000;
+  pointer-events: none;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+.dashboard-shell-loading-overlay{
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999; /* Au-dessus de tout */
+  pointer-events: none;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  background: rgba(0, 0, 0, 0.8);
+}
+.dashboard-shell-loading-spinner{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+.dashboard-shell-loading-spinner .spinner{
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    #1b91f1 0deg,
+    #1b91f1 110deg,
+    rgba(27, 145, 241, 0.25) 150deg,
+    #b80099 190deg,
+    #b80099 310deg,
+    rgba(184, 0, 153, 0.25) 350deg,
+    #1b91f1 360deg
+  );
+  mask: radial-gradient(farthest-side, transparent 60%, #000 62%);
+  -webkit-mask: radial-gradient(farthest-side, transparent 60%, #000 62%);
+  filter: blur(0.5px);
+  animation: spin 1s linear infinite;
+  box-shadow: 0 0 20px rgba(0,0,0,0.45);
+}
+.dashboard-shell-loading-spinner p{
+  color: white;
+  font-size: 1.1rem;
+}
+.dashboard-shell-loading-spinner + *{
+  pointer-events: none;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+.dashboard-shell-body{
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.dashboard-shell-body-blur{
+  filter: blur(8px);
+  transform: translateZ(0);
 }
 
 
@@ -645,6 +719,8 @@ body>footer {
   flex-direction: column;
   gap: 12px;
   padding: 8px;
+  overflow-y: auto;  
+  margin-top: 0.7rem;
 }
 .server-icon{
   background-color: black;

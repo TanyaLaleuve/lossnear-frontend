@@ -7,6 +7,7 @@ const SIDEBAR_WIDTH = 75;
 
 export default function DashboardShell({ children }) {
   const [open, setOpen] = useState(true);
+  const [sidebarLoading, setSidebarLoading] = useState(false);
   const { user } = useAuth();
   const userRef = useRef(null);
 
@@ -60,17 +61,27 @@ export default function DashboardShell({ children }) {
         className={`dashboard-shell-sidebar ${open ? "" : "closed"}`}
         style={{ width: `${SIDEBAR_WIDTH}px` }}
       >
-        <SidebarServerList />
+        <SidebarServerList onLoadingChange={setSidebarLoading} />
       </div>
 
       <div
-        className="dashboard-shell-content"
+        className={`dashboard-shell-content ${sidebarLoading ? "dashboard-shell-content-loading" : ""}`}
         style={{ marginLeft: open ? 0 : `-${SIDEBAR_WIDTH}px` }}
       >
+        {sidebarLoading && (
+          <div className="dashboard-shell-loading-overlay">
+            <div className="dashboard-shell-loading-spinner">
+              <div className="spinner" />
+              <p>Chargement des serveurs...</p>
+            </div>
+          </div>
+        )}
         <button className="dashboard-shell-toggle" onClick={handleToggle}>
           {open ? "|<" : "|>"}
         </button>
-        {children}
+        <div className={`dashboard-shell-body ${sidebarLoading ? "dashboard-shell-body-blur" : ""}`}>
+          {children}
+        </div>
       </div>
     </div>
   );

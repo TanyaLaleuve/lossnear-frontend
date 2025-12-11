@@ -12,15 +12,6 @@ export default function DashboardHome() {
     <div className="global-wrapper">
       <main className="dashboard-main">
         <h1 className="lossnear-gradient">Dashboard</h1>
-        <br/><br/><br/><br/><br/><br/><br/>
-        <br/><br/><br/><br/><br/><br/><br/>
-        <br/><br/><br/><br/><br/><br/><br/>
-        <br/><br/><br/><br/><br/><br/><br/>
-        <br/><br/><br/><br/><br/><br/><br/>
-        <br/><br/><br/><br/><br/><br/><br/>
-        <br/><br/><br/><br/><br/><br/><br/>
-        <br/><br/><br/><br/><br/><br/><br/>
-        <br/><br/><br/><br/><br/><br/><br/>
       </main>
     </div>
   );
