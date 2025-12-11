@@ -10,7 +10,7 @@ export default async function DashboardServerPage({ params }) {
   return (
     <div className="global-wrapper">
       <main className="dashboard-main">
-        <h2 className="lossnear-gradient">Serveur {serverId}</h2>
+        <h1 className="lossnear-gradient">Serveur {serverId}</h1>
         <p>Contenu du serveur ici.</p>
       </main>
     </div>

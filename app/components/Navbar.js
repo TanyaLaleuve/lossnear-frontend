@@ -121,7 +121,7 @@ export default function Navbar() {
                                 <li><Link href="/" onClick={() => {setOpen(false)}}>Accueil</Link></li>
                                 <li><Link href="/about" onClick={() => setOpen(false)}>À propos</Link></li>
                                 <li><Link href="/status" onClick={() => setOpen(false)}>Statut</Link></li>
-                                <li><Link href="/custom" onClick={() => setOpen(false)}>Personnalisé</Link></li>
+                                <li><Link href="/custom" onClick={() => setOpen(false)}>Personnalisation</Link></li>
                                 {/* SECTION AUTH */}
                                 {user && (
                                     <div className="nav-auth container-logged navbar-links-list">

@@ -3,47 +3,12 @@ import { useAuth } from "@/app/context/AuthContext";
 import { useEffect, useRef, useState } from "react";
 import { FaHome, FaSync } from "react-icons/fa";
 import { usePathname, useRouter } from "next/navigation";
+import { useSidebar } from "@/app/context/SidebarContext";
 
 export default function SidebarServerList({ onLoadingChange }) {
   const { user } = useAuth();
-  const [isOpen, setIsOpen] = useState(true);
-  const startXRef = useRef(0);
-  const startYRef = useRef(0);
   const router = useRouter();
   const pathname = usePathname();
-
-  useEffect(() => {
-    const SWIPE_THRESHOLD = 60;
-    const handleTouchStart = (event) => {
-      const touch = event.touches[0];
-      startXRef.current = touch.clientX;
-      startYRef.current = touch.clientY;
-    };
-
-    const handleTouchEnd = (event) => {
-      const touch = event.changedTouches[0];
-      const deltaX = touch.clientX - startXRef.current;
-      const deltaY = touch.clientY - startYRef.current;
-
-      // Ignore mostly vertical gestures to avoid breaking scroll
-      if (Math.abs(deltaY) > Math.abs(deltaX)) return;
-      if (Math.abs(deltaX) < SWIPE_THRESHOLD) return;
-
-      if (isOpen && deltaX < -SWIPE_THRESHOLD) {
-        setIsOpen(false);
-      } else if (!isOpen && startXRef.current < 60 && deltaX > SWIPE_THRESHOLD) {
-        // Only listen for the "open" swipe starting near the left edge
-        setIsOpen(true);
-      }
-    };
-
-    window.addEventListener("touchstart", handleTouchStart);
-    window.addEventListener("touchend", handleTouchEnd);
-    return () => {
-      window.removeEventListener("touchstart", handleTouchStart);
-      window.removeEventListener("touchend", handleTouchEnd);
-    };
-  }, [isOpen]);
 
   if (!user) {
     return null;
@@ -52,6 +17,7 @@ export default function SidebarServerList({ onLoadingChange }) {
   // Afficher la liste des serveurs de l'utilisateur
   const [loading, setLoading] = useState(true);
   const [guilds, setGuilds] = useState([]);
+  const { open, setOpen, openT2, setOpenT2 } = useSidebar();
 
   const pathSegments = pathname.split("/");
   const isServerRoute =
@@ -72,7 +38,7 @@ export default function SidebarServerList({ onLoadingChange }) {
   }
 
   // --------------------------
-  // ĐY"¾ Chargement initial
+  // Chargement initial
   // --------------------------
   useEffect(() => {
     loadGuilds();
@@ -87,7 +53,7 @@ export default function SidebarServerList({ onLoadingChange }) {
   function reloadAll() {
     loadGuilds();
   }
-
+  // render
   return (
     <div className="dashboard-layout-sidebar">
       <button className="btn-icon icon-sidebar sidebar-rl-btn" onClick={reloadAll}>
@@ -96,6 +62,7 @@ export default function SidebarServerList({ onLoadingChange }) {
       <button
         className="btn-icon icon-sidebar sidebar-home-btn"
         onClick={() => {
+          setOpenT2(false);
           router.push("/dashboard");
         }}
       >
@@ -131,6 +98,8 @@ export default function SidebarServerList({ onLoadingChange }) {
                   }`}
                   title={g.name}
                   onClick={() => {
+                    
+                    setOpenT2(true);
                     router.push(target);
                   }}
                 >

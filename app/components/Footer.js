@@ -14,7 +14,8 @@ export default function Footer() {
                             <li><Link href="/">Accueil</Link></li>
                             <li><Link href="/about">À propos</Link></li>
                             <li><Link href="/status">Statut</Link></li>
-                            <li><Link href="/custom">Personnalisé</Link></li>
+                            <li><Link href="/custom">Personnalisation</Link></li>
+                            <li><Link href="/dashboard">Dashboard</Link></li>
                         </ul>
                     </article>
                     <article className="global-footer-utils footer-list">
@@ -23,7 +24,7 @@ export default function Footer() {
                             <li><Link href="/dashboard">Dashboard</Link></li>
                             <li><Link href="https://doc.lossnear.com">Documentation</Link></li>
                             <li><Link href="https://github.com/lossnear">Github</Link></li>
-                            <li><Link href="https://discord.gg/lossnear">Support server</Link></li>
+                            <li><Link href="https://discord.gg/D857rxz">Support server</Link></li>
                         </ul>
                     </article>
                     <article className="global-footer-legal footer-list">

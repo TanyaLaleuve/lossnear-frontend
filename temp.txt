@@ -1,0 +1,131 @@
+"use client";
+import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
+import SidebarServerList from "../components/dashboard/Sidebar-ServerList";
+import SidebarModules from "../components/dashboard/SidebarModules";
+import { useAuth } from "../context/AuthContext";
+import NotLogged from "./notLogged";
+
+export default function DashboardShell({ children }) {
+  const pathname = usePathname(); // URL courante du dashboard
+  const [open, setOpen] = useState(false);
+  const [open_t2, setOpen_t2] = useState(false);
+
+  const [sidebarLoading, setSidebarLoading] = useState(false);
+  const { user } = useAuth();
+  const userRef = useRef(null);
+  console.log(`DashboardShell - pathname: ${pathname}`);
+  useEffect(() => {
+
+    const prevUser = userRef.current;
+    userRef.current = user;
+    if (!user) {
+      // Ferme le panneau dès qu'on se déconnecte
+      setOpen(false);
+      setOpen_t2(false);
+    } else if (user && !prevUser) {
+      // Ouvre par défaut à la connexion
+      setOpen(true);
+      setOpen_t2(true);
+    }
+  }, [user]);
+
+  useEffect(() => {
+
+      let startX = 0;
+
+      // Swipe handlers
+      const handleSwipeLeft = () => {
+        console.log(`swipe left (open: ${open}, open_t2: ${open_t2})`);
+        if (open) {
+          setOpen(false);
+          console.log("t1 fermé");
+        }
+        else if (open_t2) {
+          setOpen_t2(false);
+          console.log("t2 fermé");
+        }
+      };
+
+      const handleSwipeRight = () => {
+        console.log(`swipe right (open: ${open}, open_t2: ${open_t2})`);
+        if (!open_t2) {
+          setOpen_t2(true);
+          console.log("t2 ouvert");
+        }
+        else if (!open) {
+          setOpen(true);
+          console.log("t1 ouvert");
+        }
+      };
+
+      // Touch event listeners
+      const onTouchStart = (e) => {
+        console.log("touch start");
+        if (!userRef.current) return;
+        startX = e.touches[0].clientX;
+      };
+
+      const onTouchEnd = (e) => {
+        console.log("touch end");
+        if (!userRef.current) return;
+        const endX = e.changedTouches[0].clientX;
+        const diff = endX - startX;
+
+        if (diff < -40) handleSwipeLeft();//setOpen(false);
+        if (diff > 40) handleSwipeRight();//setOpen(true);
+      };
+        // Attach listeners
+        window.addEventListener("touchstart", onTouchStart);
+        window.addEventListener("touchend", onTouchEnd);
+        return () => {
+          window.removeEventListener("touchstart", onTouchStart);
+          window.removeEventListener("touchend", onTouchEnd);
+        };
+  }, [open, open_t2]);
+
+  const handleToggle = () => setOpen((prev) => !prev);
+  const handleToggle_t2 = () => setOpen_t2((prev) => !prev);
+
+  if (!user) {
+    return <NotLogged />;
+  }
+
+  return (
+    <div className="dashboard-shell">
+      {/* Sidebar T1 : serveurs */ }
+      <aside
+        className={`dashboard-shell-sidebar ${open ? "" : "closed"}`}
+      >
+        <SidebarServerList onLoadingChange={setSidebarLoading} />
+      </aside>
+
+
+
+      <div
+        className={`dashboard-shell-content ${sidebarLoading ? "dashboard-shell-content-loading" : ""}`}
+      >
+        {sidebarLoading && (
+          <div className="dashboard-shell-loading-overlay">
+            <div className="dashboard-shell-loading-spinner">
+              <div className="spinner" />
+              <p>Chargement des serveurs...</p>
+            </div>
+          </div>
+        )}
+        <button className="dashboard-shell-toggle" onClick={handleToggle}>
+          {open ? "|<" : "|>"}
+        </button>
+        <div className={`dashboard-shell-body ${sidebarLoading ? "dashboard-shell-body-blur" : ""}`}>
+          {/* Sidebar T2 : modules */}
+          <aside className={`dashboard-shell-sidebar-t2 ${open_t2 ? "" : "closed"}`}>
+            <SidebarModules onLoadingChange={setSidebarLoading} />
+          </aside>
+          <div className="dashboard-shell-main">
+            {children}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

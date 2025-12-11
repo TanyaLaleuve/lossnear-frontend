@@ -20,6 +20,8 @@
   --navbar-height: 77px;
   /*--footer-height: 500px;*/
   --sidebar-width: 75px;
+  --sidebar-t2-width: 100%;
+
   --global-wrapper-width: 90%;
   --sidebar-background: #222;
 
@@ -378,6 +380,17 @@ ul {
   animation: effet 5s ease-in-out 5s infinite;
 }
 
+.btn-primary{
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #1b91f1, #b80099);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: transform 0.2s ease;
+
+}
 /*--------------------------------------------- 
 
                     Footer
@@ -394,11 +407,10 @@ body>footer {
   height: 100%;
   display: grid;
   grid-template-areas:
-    "title . "
-    "link utils"
-    "social social"
-    "legal legal"
-    "copyright copyright";
+    " title title title "
+    "link utils legal"
+    ". social  . "
+    "copyright copyright copyright";
   font-size: 1.07rem;
 }
 
@@ -557,21 +569,41 @@ body>footer {
   position: relative;
 }
 .dashboard-shell-sidebar{
-  width: 75px;
+  width: var(--sidebar-width);
+  flex: 0 0 var(--sidebar-width);
   background: var(--sidebar-background);
-  transition: transform 0.25s ease;
-  padding: 1rem 0.5rem;
+  transition: transform 0.25s ease, width 0.25s ease, flex-basis 0.25s ease;
+  padding: 1rem 0;
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 .dashboard-shell-sidebar.closed{
-  transform: translateX(-75px);
+  transform: translateX(calc(var(--sidebar-width) * -1));
+  width: 0;
+  flex-basis: 0;
+}
+.dashboard-shell-sidebar-t2 {
+  position: relative;
+  background: transparent;
+  transition: transform 0.25s ease, width 0.25s ease, flex-basis 0.25s ease, margin-left 0.25s ease;
+  width: var(--sidebar-t2-width);
+  flex: 0 0 var(--sidebar-t2-width);
+  margin-left: 0;
+  will-change: transform, margin-left;
+}
+.dashboard-shell-sidebar-t2.closed {
+  /* Keep intrinsic width but reclaim space with a negative margin to avoid visual shrink */
+  transform: translateX(calc(var(--sidebar-t2-width) * -1));
+  margin-left: calc(var(--sidebar-t2-width) * -1);
+  width: var(--sidebar-t2-width);
+  flex-basis: var(--sidebar-t2-width);
+  pointer-events: none;
 }
 .dashboard-shell-toggle{
   position: absolute;
   top: 16px;
-  margin-left: -1rem;
+  margin-left: 1rem;
   background: rgba(34,34,34,0.9);
   border: 1px solid #444;
   color: var(--foreground);
@@ -584,9 +616,9 @@ body>footer {
   flex: 1;
   transition: margin-left 0.25s ease;
   min-width: 0;
-  padding: 2rem;
   position: relative;
   isolation: isolate; /* allow backdrop-filter to affect only this stacking context */
+  display: flex;
 }
 .dashboard-shell-content-loading{
   pointer-events: none;
@@ -651,11 +683,7 @@ body>footer {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
-.dashboard-shell-body{
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
+
 .dashboard-shell-body-blur{
   filter: blur(8px);
   transform: translateZ(0);
@@ -713,6 +741,8 @@ body>footer {
   white-space: nowrap;
   pointer-events: none;
 }
+
+
 /* ------------ Skeleton   ------------ */
 .server-list {
   display: flex;
@@ -775,6 +805,50 @@ body>footer {
     background-position: 40px;
   }
 }
+
+/* sidebar modules */
+.sidebar-modules{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+
+.dashboard-shell-body{
+  display: flex;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.dashboard-shell-main{
+  flex: 1;
+  min-width: 0;
+}
+
+/* --------------------------------------------- 
+
+                    Dashboard Main
+
+--------------------------------------------- */
+
+.dashboard-main{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100%;
+  text-align: center;
+  gap: 1.5rem;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+
+
+
+
+
 /* ------------ Not Logged ------------ */
 
 .dashboard-main{
