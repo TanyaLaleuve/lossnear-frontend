@@ -1,7 +1,8 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import ServerList from "../components/dashboard/ServerList";
+import SidebarServerList from "../components/dashboard/Sidebar-ServerList";
 import { useAuth } from "../context/AuthContext";
+import NotLogged from "./notLogged";
 const SIDEBAR_WIDTH = 75;
 
 export default function DashboardShell({ children }) {
@@ -49,32 +50,28 @@ export default function DashboardShell({ children }) {
 
   const handleToggle = () => setOpen((prev) => !prev);
 
+  if (!user) {
+    return <NotLogged />;
+  }
+
   return (
     <div className="dashboard-shell">
-      {user && (
-        <div
-          className={`dashboard-shell-sidebar ${open ? "" : "closed"}`}
-          style={{ width: `${SIDEBAR_WIDTH}px` }}
-        >
-          
-          
-        <ServerList />
-        </div>
-      )}
-      {user && (
-        <div className="dashboard-shell-content"style={{ marginLeft: open ? 0 : `-${SIDEBAR_WIDTH}px` }}>
-          <button className="dashboard-shell-toggle" onClick={handleToggle}>
-            {open ? "|<" : "|>"}
-          </button>
-          {children}
-        </div>
-      )}
-      {!user && (
-        <div className="dashboard-shell-content" style={{ marginLeft: open ? `${SIDEBAR_WIDTH}px` : 0 }}>
-          {children}
-        </div>
-      )}
-      
+      <div
+        className={`dashboard-shell-sidebar ${open ? "" : "closed"}`}
+        style={{ width: `${SIDEBAR_WIDTH}px` }}
+      >
+        <SidebarServerList />
+      </div>
+
+      <div
+        className="dashboard-shell-content"
+        style={{ marginLeft: open ? 0 : `-${SIDEBAR_WIDTH}px` }}
+      >
+        <button className="dashboard-shell-toggle" onClick={handleToggle}>
+          {open ? "|<" : "|>"}
+        </button>
+        {children}
+      </div>
     </div>
   );
 }

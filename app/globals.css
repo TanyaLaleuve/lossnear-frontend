@@ -19,7 +19,7 @@
 
   --navbar-height: 77px;
   /*--footer-height: 500px;*/
-  --sidebar-width: 275px;
+  --sidebar-width: 75px;
   --global-wrapper-width: 90%;
   --sidebar-background: #222;
 
@@ -137,6 +137,15 @@ ul {
   grid-template-rows: 1fr;
 }
 
+.btn-icon {
+  color: var(--foreground);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: none;
+  background: none;
+}
 /* --------------------------------------------- 
 
                     Navbar
@@ -586,15 +595,109 @@ body>footer {
   gap: 1rem;
 }
 .sidebar-home-btn{
-  background: none;
-  border: none;
-  color: var(--foreground);
-  cursor: pointer;
   font-size: 1.5rem;
+}
+.sidebar-rl-btn{
+  color: var(--modal-foreground-tertiary);
+  transition: color 0.2s ease;
+}
+.sidebar-rl-btn:hover{
+  color: var(--foreground);
+}
+
+.icon-sidebar{
+  position: relative;
+  padding: 0.2rem 1rem;
+}
+.icon-sidebar::before{
+  content: attr(data-tooltip);
+  position: absolute;
+  z-index: 9999;
+  bottom: -0.28rem;
+  background: var(--modal-foreground-secondary);
+  padding: 1.8px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  opacity: 0;
+}
+.icon-sidebar:hover::before{
+  opacity: 1;
+}
+
+.sidebar-home-btn::after{
+  content: attr(data-tooltip);
+  position: absolute;
+  z-index: 9999;
+  bottom: -1.1rem;
+  background: var(--modal-foreground-tertiary);
+  padding: 2px 25px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  pointer-events: none;
+}
+/* ------------ Skeleton   ------------ */
+.server-list {
   display: flex;
   flex-direction: column;
+  gap: 12px;
+  padding: 8px;
+}
+.server-icon{
+  background-color: black;
+  display:flex;
+  justify-content: center;
   align-items: center;
-  gap: 4px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  overflow: hidden;
+  color: white;
+  cursor: pointer;
+  border: none;
+  position: relative;
+}
+.sidebar-server-selected{
+  border: 2px solid var(--color-blue-discord);
+}
+.server-icon::after{ 
+  content: attr(title);
+  position: absolute;
+  z-index: 100;
+  bottom: 0;
+  background: var(--modal-foreground-tertiary);
+  max-width: var(--sidebar-width);
+  padding: 1.8px 8px;
+
+  border-radius: 4px;
+  font-size: 0.75rem;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  opacity: 0; 
+}
+.server-icon:hover::after{
+ /* opacity: 1;*/
+}
+.server-icon img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.skeleton-server-icon {
+  background: linear-gradient(90deg, #2a2a2a 0%, #3a3a3a 50%, #2a2a2a 100%);
+  animation: skeleton-loading 1.4s infinite;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: -40px;
+  }
+  100% {
+    background-position: 40px;
+  }
 }
 /* ------------ Not Logged ------------ */
 
