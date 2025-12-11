@@ -13,40 +13,85 @@ export default function DashboardShell({ children }) {
 
   const [open, setOpen] = useState(false);
   const [open_t2, setOpen_t2] = useState(false);
+  const [lastRecent, setLastRecent] = useState(null); // dernier panneau touché (open/close): 't1' ou 't2'
   const [sidebarLoading, setSidebarLoading] = useState(false);
 
   const { user } = useAuth();
   const userRef = useRef(null);
 
-  // Ferme tout si déconnexion. Sinon on garde l'état courant (défini par useState).
+  // Ferme tout si déconnexion.
   useEffect(() => {
     userRef.current = user;
     if (!user) {
       setOpen(false);
       setOpen_t2(false);
+      setLastRecent(null);
     }
   }, [user]);
 
-  // Gestuelle swipe
+  // Gestuelle swipe et logique unifiée d'ouverture/fermeture
   useEffect(() => {
     let startX = 0;
 
-    const handleSwipeLeft = () => {
+    const openT1 = () => {
+      setOpen(true);
+      setLastRecent("t1");
+    };
+    const openT2 = () => {
+      setOpen_t2(true);
+      setLastRecent("t2");
+    };
+    const closeT1 = () => {
+      setOpen(false);
+      setLastRecent("t1");
+    };
+    const closeT2 = () => {
+      setOpen_t2(false);
+      setLastRecent("t2");
+    };
+
+    // Ouvre en priorité le dernier fermé (ou l'autre si l'un est déjà ouvert)
+    const doOpen = () => {
       if (isHome) {
-        if (open) setOpen(false); // seulement T1 sur home
+        if (!open) openT1();
         return;
       }
-      if (open) setOpen(false);
-      else if (open_t2) setOpen_t2(false);
+      if (open && !open_t2) {
+        openT2();
+        return;
+      }
+      if (open_t2 && !open) {
+        openT1();
+        return;
+      }
+      if (!open && !open_t2) {
+        if (lastRecent === "t2") openT2();
+        else if (lastRecent === "t1") openT1();
+        else openT1();
+      }
+    };
+
+    // Ferme en priorité le dernier ouvert
+    const doClose = () => {
+      if (isHome) {
+        if (open) closeT1();
+        return;
+      }
+      if (open && open_t2) {
+        if (lastRecent === "t2") closeT2();
+        else closeT1();
+        return;
+      }
+      if (open) closeT1();
+      else if (open_t2) closeT2();
+    };
+
+    const handleSwipeLeft = () => {
+      doClose();
     };
 
     const handleSwipeRight = () => {
-      if (isHome) {
-        if (!open) setOpen(true); // seulement T1 sur home
-        return;
-      }
-      if (!open_t2) setOpen_t2(true);
-      else if (!open) setOpen(true);
+      doOpen();
     };
 
     const onTouchStart = (e) => {
@@ -68,9 +113,39 @@ export default function DashboardShell({ children }) {
       window.removeEventListener("touchstart", onTouchStart);
       window.removeEventListener("touchend", onTouchEnd);
     };
-  }, [open, open_t2, isHome]);
+  }, [open, open_t2, lastRecent, isHome]);
 
-  const handleToggle = () => setOpen((prev) => !prev);
+  // Toggles utilisent la même logique (ouverture/fermeture) que les swipes
+  const handleToggle = () => {
+    if (open) {
+      setOpen(false);
+      setLastRecent(open_t2 ? "t2" : null);
+    } else {
+      if (open_t2) {
+        // si T2 est déjà ouverte et on toggle T1, on ouvre T1 sans fermer T2
+        setOpen(true);
+        setLastRecent("t1");
+      } else {
+        setOpen(true);
+        setLastRecent("t1");
+      }
+    }
+  };
+
+  const handleToggle_t2 = () => {
+    if (open_t2) {
+      setOpen_t2(false);
+      setLastRecent(open ? "t1" : null);
+    } else {
+      if (open) {
+        setOpen_t2(true);
+        setLastRecent("t2");
+      } else {
+        setOpen_t2(true);
+        setLastRecent("t2");
+      }
+    }
+  };
 
   if (!user) {
     return <NotLogged />;
@@ -103,9 +178,12 @@ export default function DashboardShell({ children }) {
             </div>
           )}
 
-          <button className="dashboard-shell-toggle" onClick={handleToggle}>
+          <button className={`dashboard-shell-toggle ${open? "open":""}`} onClick={handleToggle}>
             {open ? "|<" : "|>"}
           </button>
+          {!isHome &&(<button className={`dashboard-shell-toggle-2 ${open_t2? "open":""}`} onClick={handleToggle_t2}>
+            {open ? "|<" : "|>"}
+          </button>)}
 
           <div className={`dashboard-shell-body ${sidebarLoading ? "dashboard-shell-body-blur" : ""}`}>
             {/* Sidebar T2 : modules */}
